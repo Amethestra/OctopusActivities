@@ -1,49 +1,79 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel
+import random
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QPushButton, QWidget
 
 class SecondGame(QWidget):
-    def __init__(self, stacked_widget, parent = None):
-        super().__init__()
-        self.stacked_widget = stacked_widget
-        layout = QVBoxLayout()
-        self.setLayout(layout)
+    def __init__(self, parent=None):
+        super().__init__(parent)
         
-        label = QLabel("Mingo")
-        layout.addWidget(label)
+        self.setWindowTitle("Mingo")
+        self.setGeometry(100, 100, 800, 600)
         
-        back_button = QPushButton("Menu")
-        back_button.clicked.connect(self.return_to_menu)
-        layout.addWidget(back_button)
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
         
-        self.parent = parent
-        self.is_running = False
-        self.is_paused = False
+        self.round = 1
+        self.rounds_completed = 0
+        self.number_pool_1_4 = [10, 9, 8 ,7]
+        self.number_pool_5_7 = [6, 5, 4]
+        self.number_pool_8_10 = [3, 2]
+        self.selected_numbers = []
+        
+        self.number_label = QLabel("Press Start to Begin", self)
+        self.layout.addWidget(self.number_label)
+        
+        self.start_button = QPushButton("Start", self)
+        self.start_button.clicked.connect(self.start_game)
+        self.layout.addWidget(self.start_button)
+        
+        self.return_button = QPushButton("Return to Menu", self)
+        self.return_button.setEnabled(False)
+        self.return_button.clicked.connect(self.return_to_menu)
+        self.layout.addWidget(self.return_button)
         
     def start_game(self):
         
-        self.is_running = True
-        self.is_paused = False
-        self.setup_game()
+        if self.round <= 4:
+            
+            if len(self.number_pool_1_4) == 0:
+                self.number_pool_1_4 = [10, 9, 8, 7]
+                self.selected_numbers = []
+            available_numbers = [num for num in self.number_pool_1_4 if num not in self.selected_numbers]
+            if available_numbers:
+                num = random.choice(available_numbers)
+                self.selected_numbers.append(num)
+                self.number_pool_1_4.remove(num)
+        elif self.round <= 7:
+            
+            if len(self.number_pool_5_7) == 0:
+                self.number_pool_5_7 = [6, 5, 4]
+                self.selected_numbers = []
+            available_numbers = [num for num in self.number_pool_5_7 if num not in self.selected_numbers]
+            if available_numbers:
+                num = random.choice(available_numbers)
+                self.selected_numbers.append(num)
+                self.number_pool_5_7.remove(num)
+        else:
+            
+            num = random.choice(self.number_pool_8_10)
         
-    def setup_game(self):
-        pass
+
+        if self.rounds_completed > 9:
+            self.number_label.setText("Game Complete")
+            self.end_game()
+        else:
+            self.number_label.setText(f"Round {self.round}: {num}")
+        
+        self.round += 1
+        self.rounds_completed += 1
+
     
     def end_game(self):
-        self.is_running = False
-        self.is_paused = False
-        self.return_to_menu()
-        
-    def pause_game(self):
-        if self.is_running and not self.is_paused:
-            self.is_paused = True
-            
-    def resume_game(self):
-        if self.is_running and self.is_paused:
-            self.is_paused = False
+        self.start_button.setEnabled(False)
+        self.return_button.setEnabled(True)
     
-    
-        
-        
     def return_to_menu(self):
-        self.stacked_widget.setCurrentIndex(0)
+        self.close()
+            
+            
         
     
