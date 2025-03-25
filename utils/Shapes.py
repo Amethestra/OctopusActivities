@@ -1,8 +1,10 @@
 import sys
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QApplication
 from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import pyqtSignal
 
 class FirstGame(QWidget):
+    return_to_menu_signal = pyqtSignal()
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -34,7 +36,7 @@ class FirstGame(QWidget):
     
     def start_game(self):
         self.start_button.setVisible(False)
-        self.time_left = 60
+        self.time_left = 10
         self.update_timer_display()
         self.timer.start(1000)
     
@@ -57,7 +59,7 @@ class FirstGame(QWidget):
         self.return_button.setVisible(True)
     
     def return_to_menu(self):
-        self.close()
+        self.return_to_menu_signal.emit()
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
