@@ -1,19 +1,28 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel
+from PyQt5.QtCore import Qt
+from PyQt5.QtCore import pyqtSignal
 
 class FourthGame(QWidget):
-    def __init__(self, stacked_widget):
-        super().__init__()
-        self.stacked_widget = stacked_widget
-        layout = QVBoxLayout()
-        self.setLayout(layout)
+    return_to_menu_signal = pyqtSignal()
+    def __init__(self, parent=None):
+        super().__init__(parent)
         
-        label = QLabel("Rope Pull")
-        layout.addWidget(label)
+        self.layout = QVBoxLayout(self)
         
-        back_button = QPushButton("Menu")
-        back_button.clicked.connect(self.return_to_menu)
-        layout.addWidget(back_button)
+        self.rules_label = QLabel(self)
+        self.rules_label.setText("""
+                                 Welcome to tug of war!
+                                 """)
+        self.rules_label.setAlignment(Qt.AlignCenter)
+        self.rules_label.setWordWrap(True)
+        
+        self.layout.addWidget(self.rules_label)
+        
+        self.return_button = QPushButton("Return to menu", self)
+        self.return_button.clicked.connect(self.return_to_menu)
+        self.layout.addWidget(self.return_button)
         
     def return_to_menu(self):
-        self.stacked_widget.setCurrentIndex(0)
-    
+        self.return_to_menu_signal.emit()
+
+        
