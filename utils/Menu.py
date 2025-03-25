@@ -34,8 +34,12 @@ class Menu(QWidget):
     def start_game(self, game_class):
         """Switch to the game."""
         game_instance = game_class(self.stacked_widget)
-        self.stacked_wiidget.addWidget(game_instance)
-        self.stacked_wiidget.setCurrentWidget(game_instance)
+            
+        self.stacked_widget.addWidget(game_instance)
+        self.stacked_widget.setCurrentWidget(game_instance)
+        
+        if hasattr(game_instance, "return_to_menu_signal"):
+            game_instance.return_to_menu_signal.connect(self.show_menu)
         
     def add_navigation_button(self, name, screen_class):
         
@@ -43,17 +47,14 @@ class Menu(QWidget):
         button.clicked.connect(lambda: self.navigate_to(screen_class))
         self.layout().addWidget(button)
         
-    def start_game(self, game_class):
-        
-        game_instance = game_class(self.stacked_widget)
-        self.stacked_widget.addWidget(game_instance)
-        self.stacked_widget.setCurrentWidget(game_instance)
-    
     def navigate_to(self, screen_class):
         
         screen_instance = screen_class(self.stacked_widget)
         self.stacked_widget.addWidget(screen_instance)
         self.stacked_widget.setCurrentWidget(screen_instance)
+        
+    def show_menu(self):
+        self.stacked_widget.setCurrentWidget(self)
     
     def quit_game(self):
         QApplication.quit()
