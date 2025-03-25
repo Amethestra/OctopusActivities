@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QStackedWidget
 from utils.Menu import Menu
 
 def main():
+    print("Initializing QApplication")
     app = QApplication(sys.argv)
     
     stacked_widget = QStackedWidget()
