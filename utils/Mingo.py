@@ -1,7 +1,10 @@
 import random
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QPushButton, QWidget
+from PyQt5.QtCore import pyqtSignal
 
 class SecondGame(QWidget):
+    return_to_menu_signal = pyqtSignal()
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -72,7 +75,8 @@ class SecondGame(QWidget):
         self.return_button.setEnabled(True)
     
     def return_to_menu(self):
-        self.close()
+        self.return_to_menu_signal.emit()
+
             
             
         
